@@ -18,8 +18,10 @@ def click(i,j):
     winner = winner_check()
     if winner:
         tkinter.messagebox.showinfo("Winner", f"Người chơi {winner} thắng")
+        return
     if draw():
         tkinter.messagebox.showinfo("Hòa", "Hòa nhé !")
+        return 
 
 for i in range(3):
     for j in range(3):
