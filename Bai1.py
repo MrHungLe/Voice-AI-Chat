@@ -36,6 +36,7 @@ def reset_board():
         for j in range(3):
             interface[i][j].config(text='')
 
+
 for i in range(3):
     for j in range(3):
         interface[i][j] =tk.Button(root, text='', width= 50, height=5, font=('Arial', 12), activebackground= 'lightblue', background= 'beige', command=lambda i=i, j=j: click(i,j) )
