@@ -3,60 +3,66 @@ import tkinter.messagebox
 
 root = tkinter.Tk()
 root.title("Tic Tac Toe")
-
-nguoi_choi = 'X'
-giaodien = [[None for i in range(3)] for j in range(3)]
+player = 'X'
+interface = [[None for i in range(3)] for j in range(3)]
 def click(i,j):
-    global nguoi_choi
-    btn = giaodien[i][j]
+    global player
+    btn = interface[i][j]
     if btn['text']== '':
-        btn.config(text=nguoi_choi)
-        if nguoi_choi == 'X':
-            nguoi_choi = 'O'
+        btn.config(text=player, fg='green' if player == 'X' else 'red')
+        if player == 'X':
+            player = 'O'
         else:
-            nguoi_choi = 'X'
+            player = 'X'
     winner = winner_check()
     if winner:
-        tkinter.messagebox.showinfo("Winner", f"Người chơi {winner} thắng")
+        if tkinter.messagebox.askyesno("Winner", f"Người chơi {winner} thắng\n Bạn có muốn chơi lại không ?"):
+            reset_board()
+        else:
+            root.destroy()
+       
+        return  
     if draw():
-        tkinter.messagebox.showinfo("Hòa", "Hòa nhé !")
+        if tkinter.messagebox.askyesno("Hòa", "Hòa nhé !\nBạn có muốn chơi lại không ?"):
+            reset_board()
+        else:
+            root.destroy()
+        return
+
+def reset_board():
+    global player
+    player = 'X'
+    for i in range(3):
+        for j in range(3):
+            interface[i][j].config(text='')
 
 for i in range(3):
     for j in range(3):
-        giaodien[i][j] =tk.Button(root, text='', width= 50, height=5, command=lambda i=i, j=j: click(i,j) )
-        giaodien[i][j].grid(column=j, row=i)
+        interface[i][j] =tk.Button(root, text='', width= 50, height=5, font=('Arial', 12), activebackground= 'lightblue', background= 'beige', command=lambda i=i, j=j: click(i,j) )
+        interface[i][j].grid(column=j, row=i)
 
 def winner_check():
-    if giaodien[0][0]['text']==giaodien[0][1]['text']==giaodien[0][2]['text']!= '':
-        return giaodien[0][0]['text']
-
-    if giaodien[1][0]['text']==giaodien[1][1]['text']==giaodien[1][2]['text']!= '':
-        return giaodien[1][0]['text']
-
-    if giaodien[2][0]['text']==giaodien[2][1]['text']==giaodien[2][2]['text']!= '':
-        return giaodien[2][0]['text']
-
-    if giaodien[0][0]['text']==giaodien[1][0]['text']==giaodien[2][0]['text']!= '':
-        return giaodien[0][0]['text']
-
-    if giaodien[0][1]['text']==giaodien[1][1]['text']==giaodien[2][1]['text']!= '':
-        return giaodien[0][1]['text']
-
-    if giaodien[0][2]['text']==giaodien[1][2]['text']==giaodien[2][2]['text']!= '':
-        return giaodien[0][2]['text']
-
-    if giaodien[0][0]['text']==giaodien[1][1]['text']==giaodien[2][2]['text']!= '':
-        return giaodien[0][0]['text']
-
-    if giaodien[0][2]['text']==giaodien[1][1]['text']==giaodien[2][0]['text']!= '':
-        return giaodien[0][2]['text']
-
+    lines = [];
+    #kiem tra hang
+    for i in range(3):
+        lines.append([interface[i][j]['text'] for j in range(3)])
+    #kiem tra cot    
+    for j in range(3):
+        lines.append([interface[i][j]['text'] for i in range(3)])
+    #kiem tra 2 duong cheo
+    lines.append([interface[i][i]['text'] for i in range(3)])  
+    lines.append([interface[i][2-i]['text'] for i in range(3)])
+    for line in lines:
+        if line[0] != "" and all(cell == line[0] for cell in line):
+            return line[0]
+        
 def draw():
     for i in range(3):
         for j in range(3):
-            if giaodien[i][j]['text'] == '':
+            if interface[i][j]['text'] == '':
                 return False
     return True
 
 root.mainloop()
+
 
